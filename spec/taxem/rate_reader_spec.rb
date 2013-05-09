@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Taxem::RateReader do
 
   before(:all) do
-    path_to_csv = './taxem/data/NER2013Q2FEB25.txt'
+    path_to_csv = rate_data
     @rate_reader = Taxem::RateReader.new(path_to_csv)
   end
 

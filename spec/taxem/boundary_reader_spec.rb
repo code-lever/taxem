@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Taxem::BoundaryReader do
 
   before(:all) do
-    path_to_csv = './taxem/data/NEB2013Q2FEB25.txt'
+    path_to_csv = boundary_data
     @boundary_reader = Taxem::BoundaryReader.new(path_to_csv)
   end
 
