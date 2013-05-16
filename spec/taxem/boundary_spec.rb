@@ -45,6 +45,9 @@ describe Taxem::Boundary do
              :special_tax_district_code_20,
              :type_of_taxing_authority_code_20]
 
+  it { should respond_to :row }
+  its(:row) { should == row }
+
   readers.each do |method|
     it { should respond_to method }
   end
@@ -56,36 +59,36 @@ describe Taxem::Boundary do
   describe '::parse_line' do
 
     context "Line does not begin with 'Z'" do
-      let(:line) {'4,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'}
-      subject{Taxem::Boundary.parse_line(line)}
-      it {should be_nil}
+      let(:line) { '4,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line(line) }
+      it { should be_nil }
     end
 
     context "Line does begin with 'Z'" do
-      let(:line) {'Z,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'}
-      subject{Taxem::Boundary.parse_line(line)}
-      it {should be_a Taxem::Boundary}
-      its(:record_type) {should == 'Z'}
+      let(:line) { 'Z,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line(line) }
+      it { should be_a Taxem::Boundary }
+      its(:record_type) { should == 'Z' }
     end
 
     context "Today is between effective dates" do
-      let(:line) {'Z,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'}
-      subject{Taxem::Boundary.parse_line(line)}
-      it {should be_a Taxem::Boundary}
-      its(:beginning_effective_date) {should == Date.new(2007, 07, 01)}
-      its(:ending_effective_date) {should == Date.new(2999, 12, 31)}
+      let(:line) { 'Z,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line(line) }
+      it { should be_a Taxem::Boundary }
+      its(:beginning_effective_date) { should == Date.new(2007, 07, 01) }
+      its(:ending_effective_date) { should == Date.new(2999, 12, 31) }
     end
 
     context "Today is before the beginning effective date" do
-      let(:line) {'Z,20150701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'}
-      subject{Taxem::Boundary.parse_line(line)}
-      it {should be_nil}
+      let(:line) { 'Z,20150701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line(line) }
+      it { should be_nil }
     end
 
     context "Today is after the ending effective date" do
-      let(:line) {'Z,20070701,20081231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'}
-      subject{Taxem::Boundary.parse_line(line)}
-      it {should be_nil}
+      let(:line) { 'Z,20070701,20081231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line(line) }
+      it { should be_nil }
     end
 
   end

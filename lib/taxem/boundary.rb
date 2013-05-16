@@ -1,6 +1,7 @@
 module Taxem
   class Boundary
-    attr_reader :record_type,
+    attr_reader :row,
+                :record_type,
                 :beginning_effective_date,
                 :ending_effective_date,
                 :low_address_range,
@@ -36,7 +37,9 @@ module Taxem
                 :special_tax_district_code_20,
                 :type_of_taxing_authority_code_20
 
+
     def initialize(row)
+      @row = row
       @record_type = row[0]
       @beginning_effective_date = Date.parse(row[1].to_s)
       @ending_effective_date = Date.parse(row[2].to_s)
