@@ -5,9 +5,11 @@ require 'taxem/taxable_boundary_shared_example'
 describe Taxem::TaxCalculator do
   before(:each) do
     @tax_rates = double("TaxRates")
-    @tax_rates.stub(:for_state).and_return(1)
-    @tax_rates.stub(:for_county).and_return(2)
-    @tax_rates.stub(:for_place).and_return(3)
+    @tax_rates.stub(:for_code).and_return(1)
+    @tax_rates.stub(:for_code).with("").and_return(0)
+    @tax_rates.stub(:for_code).with("00").and_return(0)
+    @tax_rates.stub(:for_code).with(nil).and_return(0)
+    @tax_rates.stub(:for_code).with("unknown").and_raise(Taxem::RateNotFoundError)
   end
   let(:tax_rates) { @tax_rates }
 
@@ -30,7 +32,7 @@ describe Taxem::TaxCalculator do
       it_behaves_like "a TaxableBoundary object"
     end
     it "#rate" do
-      subject.rate(@taxable_boundary).should == tax_rates.for_state
+      subject.rate(@taxable_boundary).should == 1
     end
   end
 
@@ -48,7 +50,7 @@ describe Taxem::TaxCalculator do
     end
 
     it "#rate" do
-      subject.rate(@taxable_boundary).should == tax_rates.for_state + tax_rates.for_county
+      subject.rate(@taxable_boundary).should == 2
     end
   end
 
@@ -65,7 +67,7 @@ describe Taxem::TaxCalculator do
       it_behaves_like "a TaxableBoundary object"
     end
     it "#rate" do
-      subject.rate(@taxable_boundary).should == tax_rates.for_state + tax_rates.for_county + tax_rates.for_place
+      subject.rate(@taxable_boundary).should == 3
     end
   end
 
@@ -82,7 +84,7 @@ describe Taxem::TaxCalculator do
       it_behaves_like "a TaxableBoundary object"
     end
     it "#rate" do
-      subject.rate(@taxable_boundary).should == tax_rates.for_county + tax_rates.for_place
+      subject.rate(@taxable_boundary).should == 2
     end
   end
 
@@ -99,7 +101,7 @@ describe Taxem::TaxCalculator do
       it_behaves_like "a TaxableBoundary object"
     end
     it "#rate" do
-      subject.rate(@taxable_boundary).should == tax_rates.for_county + tax_rates.for_place
+      subject.rate(@taxable_boundary).should == 2
     end
   end
 
@@ -116,7 +118,7 @@ describe Taxem::TaxCalculator do
       it_behaves_like "a TaxableBoundary object"
     end
     it "#rate" do
-      expect { subject.rate(@taxable_boundary) }.to raise_error Taxem::TaxCalculator::InvalidStateIndicator
+      expect { subject.rate(@taxable_boundary) }.to raise_error Taxem::InvalidStateIndicatorError
     end
   end
 end

@@ -15,10 +15,10 @@ module Taxem
       @state = row[i]
       @jurisdiction_type = row[i+=1]
       @jurisdiction_fips_code = row[i+=1]
-      @general_tax_rate_intrastate = row[i+=1]
-      @general_tax_rate_interstate = row[i+=1]
-      @food_drug_tax_rate_intrastate = row[i+=1]
-      @food_drug_tax_rate_interstate = row[i+=1]
+      @general_tax_rate_intrastate = Float(row[i+=1])
+      @general_tax_rate_interstate = Float(row[i+=1])
+      @food_drug_tax_rate_intrastate = Float(row[i+=1])
+      @food_drug_tax_rate_interstate = Float(row[i+=1])
       @effective_begin_date = Date.parse(row[i+=1].to_s)
       @effective_end_date = Date.parse(row[i+=1].to_s)
     end

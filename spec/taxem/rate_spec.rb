@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'taxem/rate_shared_example'
 
 describe Taxem::Rate do
   let(:row) { (0..7).map { |i| i } }
@@ -10,6 +11,9 @@ describe Taxem::Rate do
 
   let(:row) { @row }
   subject { Taxem::Rate.new(row) }
+
+  it_behaves_like "a rate for TaxRates"
+
   readers = [:state,
              :jurisdiction_type,
              :jurisdiction_fips_code,
@@ -27,6 +31,11 @@ describe Taxem::Rate do
   (0..7).each do |item|
     its(readers[item]) { should == row[item] }
   end
+
+  its(:general_tax_rate_intrastate) {should be_a Float}
+  its(:general_tax_rate_interstate) {should be_a Float}
+  its(:food_drug_tax_rate_intrastate) {should be_a Float}
+  its(:food_drug_tax_rate_interstate) {should be_a Float}
 
   describe '::parse_line' do
     context "Today is between effective dates" do

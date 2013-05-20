@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'taxem/taxable_boundary_shared_example'
+require 'taxem/boundary_shared_example'
 
 describe Taxem::Boundary do
   before(:all) do
@@ -47,6 +49,9 @@ describe Taxem::Boundary do
 
   it { should respond_to :row }
   its(:row) { should == row }
+
+  it_behaves_like "a TaxableBoundary object"
+  it_behaves_like "a boundary for ZipBoundaries"
 
   readers.each do |method|
     it { should respond_to method }
