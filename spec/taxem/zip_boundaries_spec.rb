@@ -7,6 +7,7 @@ describe Taxem::ZipBoundaries do
     b1 = double("Boundary")
     b1.stub(:zip_code_low).and_return("12345")
     b1.stub(:zip_code_high).and_return("12347")
+
     b1
   end
 

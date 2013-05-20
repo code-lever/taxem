@@ -40,6 +40,10 @@ describe Taxem::TaxRates do
     rate.stub(:effective_end_date).and_return(Date.new(2007, 12, 31))
     rate
   end
+  describe "rate not effective" do
+    subject { rate2 }
+    it_behaves_like 'a rate for TaxRates'
+  end
 
   describe "rate not effective" do
     subject { rate2 }
