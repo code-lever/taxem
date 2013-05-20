@@ -31,6 +31,11 @@ module Taxem
     def for_zip(zip_code)
       @by_zip[zip_code]
     end
+
+    def all_zips
+      @by_zip.keys
+    end
+
   end
 
 end

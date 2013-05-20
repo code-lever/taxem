@@ -46,7 +46,7 @@ describe Taxem::ZipBoundaries do
   end
 
   it 'accepts a date in the initializer' do
-    Taxem::ZipBoundaries.new(Date.new(2011, 11, 11)).date.should == Date.new(2011,11,11)
+    Taxem::ZipBoundaries.new(Date.new(2011, 11, 11)).date.should == Date.new(2011, 11, 11)
   end
 
   describe "#for_zip" do
@@ -55,10 +55,11 @@ describe Taxem::ZipBoundaries do
     end
   end
 
+
   describe "#add_boundary" do
     it "raises an error is a boundary with the same zip is added a second time" do
       subject.add_boundary(b1)
-      expect {subject.add_boundary(b1)}.to raise_error Taxem::DuplicateZipCodeError
+      expect { subject.add_boundary(b1) }.to raise_error Taxem::DuplicateZipCodeError
     end
 
     context "Boundary 1 added" do
@@ -102,4 +103,15 @@ describe Taxem::ZipBoundaries do
       end
     end
   end
+  describe "#all_zips" do
+    context "b1 and b2 added" do
+      subject { Taxem::ZipBoundaries.new.add_boundaries([b1, b2]) }
+      its(:all_zips) { should == [12345, 12346, 12347, 22345, 22346, 22347] }
+    end
+    context "nothing added" do
+      subject {Taxem::ZipBoundaries.new}
+      its(:all_zips) {should ==[]}
+    end
+  end
+
 end
