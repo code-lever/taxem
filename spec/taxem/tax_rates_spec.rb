@@ -62,7 +62,7 @@ describe Taxem::TaxRates do
   end
 
   describe "#add_rate" do
-    it "raise error if rates with the same code are added" do
+    it "raise error if a rate with the same code is added" do
       subject.add_rate(rate1)
       expect {subject.add_rate(rate1)}.to raise_error Taxem::DuplicateRateError
     end

@@ -31,9 +31,16 @@ module Taxem
 
   # Raised when a rate with the same code is
   # added to tax rates. There should only be one
-  # rate for the specified time period.
+  # effective rate for the specified time period.
   #
   class DuplicateRateError < RuntimeError
+  end
+
+  # Raised when a boundary with a duplicate 5 digit zip code
+  # is added to ZipBoundaries. There should only be one
+  # effective zip code for the specified time period.
+  #
+  class DuplicateZipCodeError < RuntimeError
   end
 
   class Taxem
