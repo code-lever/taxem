@@ -13,33 +13,6 @@ describe Taxem::BoundaryReader do
   its(:records_in_file) { should == 591393 }
   its(:current_zip_level_records) { should == 630 }
 
-  it 'outputs all the codes' do
-    @boundary_reader.boundaries.each do |boundary|
-      unless boundary.fips_county_code == ""
-        puts "Zip Code: #{boundary.zip_code_low}-#{boundary.zip_code_high}"
-        puts "FIPS State Code: #{boundary.fips_state_code}"
-        puts "FIPS State Indicator: #{boundary.fips_state_indicator}"
-        puts "FIPS County Code: #{boundary.fips_county_code}"
-        puts "FIPS Place Code: #{boundary.fips_place_code}"
-        puts "FIPS Place Class Code: #{boundary.fips_place_class_code}"
-        puts ""
-      end
-    end
-    puts "----"
-    @boundary_reader.boundaries.each do |boundary|
-      if boundary.fips_county_code == ""
-        puts "Zip Code: #{boundary.zip_code_low}-#{boundary.zip_code_high}"
-        puts "FIPS State Code: #{boundary.fips_state_code}"
-        puts "FIPS State Indicator: #{boundary.fips_state_indicator}"
-        puts "FIPS County Code: #{boundary.fips_county_code}"
-        puts "FIPS Place Code: #{boundary.fips_place_code}"
-        puts "FIPS Place Class Code: #{boundary.fips_place_class_code}"
-        puts ""
-      end
-    end
-  end
-
-
   describe 'boundaries' do
     subject { @boundary_reader.boundaries }
     it { should have_at_least(1).items }

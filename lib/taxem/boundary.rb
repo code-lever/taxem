@@ -77,6 +77,46 @@ module Taxem
       @type_of_taxing_authority_code_20 = row[34]
     end
 
+    def to_s
+      data = [record_type,
+              beginning_effective_date,
+              ending_effective_date,
+              low_address_range,
+              high_address_range,
+              odd_even_range,
+              street_pre_directional_abbr,
+              street_name,
+              street_suffix,
+              street_post_directional,
+              address_secondary_abbr,
+              address_secondary_low,
+              address_secondary_high,
+              address_secondary_odd_even,
+              city_name,
+              zip_code,
+              plus4,
+              zip_code_low,
+              zip_extension_low,
+              zip_code_high,
+              zip_extension_high,
+              composite_ser_code,
+              fips_state_code,
+              fips_state_indicator,
+              fips_county_code,
+              fips_place_code,
+              fips_place_class_code,
+              longitude_data,
+              latitude_data,
+              special_tax_district_code_source_1,
+              special_tax_district_code_1,
+              type_of_taxing_authority_code_1,
+              special_tax_district_code_source_20,
+              special_tax_district_code_20,
+              type_of_taxing_authority_code_20]
+
+      "#{data.join(', ')}"
+    end
+
     def self.parse_line(line)
       me = nil
       if line[0] == 'Z' # We are only interested in the Zip records; performance improvement.

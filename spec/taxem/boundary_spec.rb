@@ -50,6 +50,8 @@ describe Taxem::Boundary do
   it { should respond_to :row }
   its(:row) { should == row }
 
+  its(:to_s) {should == "0, 2001-02-03, 2002-03-04, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34"}
+
   it_behaves_like "a TaxableBoundary object"
   it_behaves_like "a boundary for ZipBoundaries"
 

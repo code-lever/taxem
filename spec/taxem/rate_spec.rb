@@ -11,6 +11,12 @@ describe Taxem::Rate do
   let(:row) { @row }
   subject { Taxem::Rate.new(row) }
 
+  its(:general_tax_rate_intrastate) { should be_a Float }
+  its(:general_tax_rate_interstate) { should be_a Float }
+  its(:food_drug_tax_rate_intrastate) { should be_a Float }
+  its(:food_drug_tax_rate_interstate) { should be_a Float }
+  its(:to_s) { should == "0, 1, 2, 3.0, 4.0, 5.0, 6.0, 2001-02-03, 2002-02-03" }
+
   it_behaves_like "a rate for TaxRates"
 
   readers = [:state,
@@ -31,10 +37,6 @@ describe Taxem::Rate do
     its(readers[item]) { should == row[item] }
   end
 
-  its(:general_tax_rate_intrastate) { should be_a Float }
-  its(:general_tax_rate_interstate) { should be_a Float }
-  its(:food_drug_tax_rate_intrastate) { should be_a Float }
-  its(:food_drug_tax_rate_interstate) { should be_a Float }
 
   describe "#same_except_rates" do
     it "is true if attr's except for dates are equal" do
@@ -46,7 +48,7 @@ describe Taxem::Rate do
     it "is false if anything other than the dates if different" do
       rate1 = Taxem::Rate.new(row)
       (0..6).each do |i|
-        my_row = row
+        my_row = row.clone
         my_row[i] = 99
         rate2 = Taxem::Rate.new(my_row)
         rate1.same_except_dates?(rate2).should == false
@@ -56,8 +58,8 @@ describe Taxem::Rate do
     it "is true if the dates are different" do
       rate1 = Taxem::Rate.new(row)
       (7..8).each do |i|
-        my_row = row
-        my_row[i] = Date.new(2011,11,11)
+        my_row = row.clone
+        my_row[i] = Date.new(2011, 11, 11)
         rate2 = Taxem::Rate.new(my_row)
         rate1.same_except_dates?(rate2).should == true
       end

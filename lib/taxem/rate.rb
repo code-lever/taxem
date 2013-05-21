@@ -32,9 +32,16 @@ module Taxem
     end
 
     def to_s
-      "Rate: #{state}, #{jurisdiction_type}, #{jurisdiction_fips_code}, #{general_tax_rate_intrastate},"+
-          " #{general_tax_rate_interstate}, #{food_drug_tax_rate_intrastate}, #{food_drug_tax_rate_interstate}," +
-          " #{effective_begin_date}, #{effective_end_date}"
+      data = [state,
+              jurisdiction_type,
+              jurisdiction_fips_code,
+              general_tax_rate_intrastate,
+              general_tax_rate_interstate,
+              food_drug_tax_rate_intrastate,
+              food_drug_tax_rate_interstate,
+              effective_begin_date,
+              effective_end_date]
+      "#{data.join(', ')}"
     end
 
     # Returns true if the object has the same attrs except for the dates.
