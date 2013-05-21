@@ -27,8 +27,6 @@ describe Taxem::Rate do
     it { should respond_to method }
   end
 
-  it
-
   (0..7).each do |item|
     its(readers[item]) { should == row[item] }
   end
