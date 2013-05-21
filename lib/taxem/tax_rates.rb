@@ -19,7 +19,16 @@ module Taxem
 
     def add_rate(rate)
       if date.between?(rate.effective_begin_date, rate.effective_end_date)
-        raise DuplicateRateError if @by_code.has_key? rate.jurisdiction_fips_code
+        if @by_code.has_key? rate.jurisdiction_fips_code
+          # No need to error if the rates are essentially the same,
+          # Just go ahead and add the new rate.
+          # Workaround for crap data.
+          unless @by_code[rate.jurisdiction_fips_code].same_except_dates?(rate)
+            raise DuplicateRateError,
+                  "\nPrev: #{rate.to_s}\n" +
+                      "Next: #{@by_code[rate.jurisdiction_fips_code].to_s}"
+          end
+        end
         @by_code[rate.jurisdiction_fips_code] = rate
       end
       self

@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'taxem/rate_shared_example'
 
 describe Taxem::Rate do
-  let(:row) { (0..7).map { |i| i } }
   before(:all) do
     @row = (0..8).map { |i| i }
     @row[7] = Date.new(2001, 2, 3)
@@ -28,14 +27,44 @@ describe Taxem::Rate do
     it { should respond_to method }
   end
 
+  it
+
   (0..7).each do |item|
     its(readers[item]) { should == row[item] }
   end
 
-  its(:general_tax_rate_intrastate) {should be_a Float}
-  its(:general_tax_rate_interstate) {should be_a Float}
-  its(:food_drug_tax_rate_intrastate) {should be_a Float}
-  its(:food_drug_tax_rate_interstate) {should be_a Float}
+  its(:general_tax_rate_intrastate) { should be_a Float }
+  its(:general_tax_rate_interstate) { should be_a Float }
+  its(:food_drug_tax_rate_intrastate) { should be_a Float }
+  its(:food_drug_tax_rate_interstate) { should be_a Float }
+
+  describe "#same_except_rates" do
+    it "is true if attr's except for dates are equal" do
+      rate1 = Taxem::Rate.new(row)
+      rate2 = Taxem::Rate.new(row)
+      rate1.same_except_dates?(rate2.clone).should == true
+    end
+
+    it "is false if anything other than the dates if different" do
+      rate1 = Taxem::Rate.new(row)
+      (0..6).each do |i|
+        my_row = row
+        my_row[i] = 99
+        rate2 = Taxem::Rate.new(my_row)
+        rate1.same_except_dates?(rate2).should == false
+      end
+    end
+
+    it "is true if the dates are different" do
+      rate1 = Taxem::Rate.new(row)
+      (7..8).each do |i|
+        my_row = row
+        my_row[i] = Date.new(2011,11,11)
+        rate2 = Taxem::Rate.new(my_row)
+        rate1.same_except_dates?(rate2).should == true
+      end
+    end
+  end
 
   describe '::parse_line' do
     context "Today is between effective dates" do

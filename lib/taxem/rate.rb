@@ -31,6 +31,23 @@ module Taxem
       me
     end
 
+    def to_s
+      "Rate: #{state}, #{jurisdiction_type}, #{jurisdiction_fips_code}, #{general_tax_rate_intrastate},"+
+          " #{general_tax_rate_interstate}, #{food_drug_tax_rate_intrastate}, #{food_drug_tax_rate_interstate}," +
+          " #{effective_begin_date}, #{effective_end_date}"
+    end
+
+    # Returns true if the object has the same attrs except for the dates.
+    def same_except_dates?(rate)
+      state == rate.state &&
+          jurisdiction_type == rate.jurisdiction_type &&
+          jurisdiction_fips_code == rate.jurisdiction_fips_code &&
+          general_tax_rate_intrastate == rate.general_tax_rate_intrastate &&
+          general_tax_rate_interstate == rate.general_tax_rate_interstate &&
+          food_drug_tax_rate_intrastate == rate.food_drug_tax_rate_intrastate &&
+          food_drug_tax_rate_interstate == rate.food_drug_tax_rate_interstate
+    end
+
   end
 end
 

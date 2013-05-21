@@ -50,13 +50,16 @@ module Taxem
 
       @tax_rates = TaxRates.new.add_rates(rate_reader.rates)
       @zip_boundaries = ZipBoundaries.new.add_boundaries(boundary_reader.boundaries)
+      @tax_calculator = TaxCalculator.new(@tax_rates)
     end
 
     def rate_for_zip_code(zip_code)
-      @zip_boundaries
+      boundary = @zip_boundaries.for_zip(zip_code)
+      @tax_calculator.rate(boundary)
     end
 
     def zip_codes
+      @zip_boundaries.all_zips
     end
   end
 end
