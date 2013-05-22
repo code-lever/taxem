@@ -22,6 +22,7 @@ describe Taxem::Taxem do
   end
 
   it "should get 5.5 for 68114" do
+    # Nebraska furniture mart
     subject.rate_for_zip_code(68114).should == 0.07
   end
 end

@@ -27,6 +27,7 @@ module Taxem
       me = nil
       row = line.split(',')
       r = Rate.new(row)
+      #todo: Make the date take a parameter. Not just today.
       me = r if Date.today.between?(r.effective_begin_date, r.effective_end_date)
       me
     end

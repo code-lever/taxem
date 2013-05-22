@@ -7,6 +7,7 @@ require 'taxem/magento'
 require 'taxem/tax_calculator'
 require 'taxem/tax_rates'
 require 'taxem/zip_boundaries'
+require 'taxem/fips_place'
 
 module Taxem
   # Your code goes here...
