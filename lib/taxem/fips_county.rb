@@ -37,5 +37,13 @@ module Taxem
     def fips_county_code
       "#{state_ansi}#{county_ansi}"
     end
+
+    def county_name_no_county
+      # Drop the last word, its always "County"
+      words = county_name.split
+      words.slice!(-1) if words.count > 1
+      words.join(' ')
+    end
+
   end
 end

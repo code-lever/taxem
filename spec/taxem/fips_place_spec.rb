@@ -20,7 +20,7 @@ describe Taxem::FipsPlace do
   it { should respond_to :row }
   its(:row) { should == row }
 
-  its(:to_s) { should == "0, 1, 2, 3, 4, 5, 6" }
+  its(:to_s) { should == '0, 1, 2, 3, 4, 5, 6' }
 
   attributes.each do |method|
     it { should respond_to method }
@@ -33,14 +33,15 @@ describe Taxem::FipsPlace do
   it { should respond_to :fips_place_code }
   # The fips_place_code should be the state and place
   # codes concatenated together
-  its(:fips_place_code) { should == "12" }
+  its(:fips_place_code) { should == '12' }
+  its(:place_name_no_legal) {should == '3'}
 
-  describe "::parse_line" do
+  describe '::parse_line' do
     let(:line) { 'AL|01|00100|Abanda CDP|Census Designated Place|S|Chambers County' }
     subject { Taxem::FipsPlace.parse_line(line) }
-    its(:state) { should == "AL" }
-    its(:county) { should == "Chambers County" }
-    its(:fips_place_code) { should == "0100100" }
+    its(:state) { should == 'AL' }
+    its(:county) { should == 'Chambers County' }
+    its(:fips_place_code) { should == '0100100' }
     its(:place_name) {should == 'Abanda CDP'}
     its(:place_name_no_legal) {should == 'Abanda'}
   end
