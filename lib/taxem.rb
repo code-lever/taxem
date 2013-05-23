@@ -9,6 +9,8 @@ require 'taxem/tax_rates'
 require 'taxem/zip_boundaries'
 require 'taxem/fips_place'
 require 'taxem/fips_county'
+require 'taxem/fips_county_reader'
+require 'taxem/fips_place_reader'
 
 module Taxem
   # Your code goes here...

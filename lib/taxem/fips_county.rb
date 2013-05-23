@@ -11,11 +11,11 @@ module Taxem
     def initialize(row)
       @row = row
       i = 0
-      @state = row[i]
-      @state_ansi = row[i+=1]
-      @county_ansi = row[i+=1]
-      @county_name = row[i+=1]
-      @ansi_class = row[i+=1]
+      @state = row[i].strip
+      @state_ansi = row[i+=1].strip
+      @county_ansi = row[i+=1].strip
+      @county_name = row[i+=1].strip
+      @ansi_class = row[i+=1].strip
     end
 
     def self.parse_line(line)

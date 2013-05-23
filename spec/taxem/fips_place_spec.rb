@@ -41,6 +41,8 @@ describe Taxem::FipsPlace do
     its(:state) { should == "AL" }
     its(:county) { should == "Chambers County" }
     its(:fips_place_code) { should == "0100100" }
+    its(:place_name) {should == 'Abanda CDP'}
+    its(:place_name_no_legal) {should == 'Abanda'}
   end
 
 end
