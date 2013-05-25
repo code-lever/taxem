@@ -55,6 +55,7 @@ describe Taxem::Boundary do
   it_behaves_like "a TaxableBoundary object"
   it_behaves_like "a boundary for ZipBoundaries"
   it_behaves_like 'a boundary for FipsCountyReader'
+  it_behaves_like 'a boundary for FipsPlaceReader'
 
   readers.each do |method|
     it { should respond_to method }
@@ -65,6 +66,7 @@ describe Taxem::Boundary do
   end
 
   its(:state_county_code) {should == "#{subject.fips_state_code}#{subject.fips_county_code}"}
+  its(:state_place_code) {should == "#{subject.fips_state_code}#{subject.fips_place_code}"}
 
   describe '::parse_line' do
 

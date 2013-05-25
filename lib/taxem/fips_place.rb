@@ -45,7 +45,7 @@ module Taxem
       "#{data.join(', ')}"
     end
 
-    def fips_place_code
+    def state_place_code
       "#{state_fp}#{place_fp}"
     end
 

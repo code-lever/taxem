@@ -14,4 +14,9 @@ shared_examples 'a boundary for FipsCountyReader' do
   it { should respond_to :state_county_code }
 end
 
+shared_examples 'a boundary for FipsPlaceReader' do
+  it { should respond_to :state_place_code }
+end
+
+
 

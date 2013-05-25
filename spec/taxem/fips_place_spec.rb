@@ -30,10 +30,10 @@ describe Taxem::FipsPlace do
     its(attributes[i]) { should == row[i] }
   end
 
-  it { should respond_to :fips_place_code }
+  it { should respond_to :state_place_code }
   # The fips_place_code should be the state and place
   # codes concatenated together
-  its(:fips_place_code) { should == '12' }
+  its(:state_place_code) { should == '12' }
   its(:short_place_name) {should == '3'}
 
   describe '::parse_line' do
@@ -41,7 +41,7 @@ describe Taxem::FipsPlace do
     subject { Taxem::FipsPlace.parse_line(line) }
     its(:state) { should == 'AL' }
     its(:county) { should == 'Chambers County' }
-    its(:fips_place_code) { should == '0100100' }
+    its(:state_place_code) { should == '0100100' }
     its(:place_name) {should == 'Abanda CDP'}
     its(:short_place_name) {should == 'Abanda'}
   end

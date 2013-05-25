@@ -14,8 +14,7 @@ module Taxem
       end
     end
 
-    # Given the county code, return the short county name.
-    def county_for_boundary(boundary)
+    def county_name_for_boundary(boundary)
       val = nil
       if @counties.has_key? boundary.state_county_code
         val = @counties[boundary.state_county_code].short_county_name

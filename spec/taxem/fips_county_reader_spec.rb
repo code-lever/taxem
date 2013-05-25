@@ -13,7 +13,18 @@ describe Taxem::FipsCountyReader do
   end
 
   describe 'boundary' do
-    subject {boundary}
+    subject { boundary }
+    it_behaves_like 'a boundary for FipsCountyReader'
+  end
+
+  let(:unknown_boundary) do
+    boundary = double('Boundary')
+    boundary.stub(:state_county_code).and_return('unknown')
+    boundary
+  end
+
+  describe 'unknown_boundary' do
+    subject { unknown_boundary }
     it_behaves_like 'a boundary for FipsCountyReader'
   end
 
@@ -38,14 +49,17 @@ describe Taxem::FipsCountyReader do
     its(:county_ansi) { should == '055' }
     its(:county_name) { should == 'Douglas County' }
     its(:ansi_class) { should == 'H1' }
-    its(:state_county_code) {should == '31055'}
-    its(:short_county_name) {should == 'Douglas'}
+    its(:state_county_code) { should == '31055' }
+    its(:short_county_name) { should == 'Douglas' }
   end
 
   describe '#county_for_boundary' do
-    subject {@fips_county_reader}
+    subject { @fips_county_reader }
     it "finds the county name for the boundary" do
-      subject.county_for_boundary(boundary).should == 'Douglas'
+      subject.county_name_for_boundary(boundary).should == 'Douglas'
+    end
+    it 'returns nil for an unknown county' do
+      subject.county_name_for_boundary(unknown_boundary).should be_nil
     end
   end
 
