@@ -7,9 +7,9 @@ describe Taxem::Taxem do
   let(:taxem) { @taxem }
   subject { @taxem }
 
-  it "should print a bunch of stuff" do
+  it "should have a rate for all zips" do
     taxem.zip_codes.each do |zip|
-      puts "Zip: #{zip} Tax: #{taxem.rate_for_zip_code(zip)}"
+      taxem.rate_for_zip_code(zip).should > 0.0
     end
   end
 
