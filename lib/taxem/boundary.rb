@@ -117,6 +117,10 @@ module Taxem
       "#{data.join(', ')}"
     end
 
+    def state_county_code
+      "#{fips_state_code}#{fips_county_code}"
+    end
+
     def self.parse_line(line)
       me = nil
       if line[0] == 'Z' # We are only interested in the Zip records; performance improvement.

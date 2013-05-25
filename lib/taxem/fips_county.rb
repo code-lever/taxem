@@ -34,11 +34,11 @@ module Taxem
       "#{data.join(', ')}"
     end
 
-    def fips_county_code
+    def state_county_code
       "#{state_ansi}#{county_ansi}"
     end
 
-    def county_name_no_county
+    def short_county_name
       # Drop the last word, its always "County"
       words = county_name.split
       words.slice!(-1) if words.count > 1

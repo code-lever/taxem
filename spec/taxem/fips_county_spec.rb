@@ -28,13 +28,13 @@ describe Taxem::FipsCounty do
     its(attributes[i]) { should == row[i] }
   end
 
-  it { should respond_to :fips_county_code }
+  it { should respond_to :state_county_code }
 
   # the fips_county_code should be the state and county codes
   # concatenated together
-  its(:fips_county_code) { should == "12" }
+  its(:state_county_code) { should == "12" }
 
-  its(:county_name_no_county) {should == "3"}
+  its(:short_county_name) {should == "3"}
 
   describe "::parse_line" do
     let(:line) { "AL,01,001,Autauga County,H1" }
@@ -42,8 +42,8 @@ describe Taxem::FipsCounty do
     its(:state) { should == "AL" }
     its(:county_ansi) { should == "001" }
     its(:county_name) { should == 'Autauga County' }
-    its(:fips_county_code) { should == '01001' }
-    its(:county_name_no_county) {should == 'Autauga'}
+    its(:state_county_code) { should == '01001' }
+    its(:short_county_name) {should == 'Autauga'}
   end
 
 end

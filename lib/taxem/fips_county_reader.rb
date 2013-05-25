@@ -10,8 +10,17 @@ module Taxem
       IO.foreach(path_to_csv) do |line|
         @records_in_file += 1
         c = FipsCounty.parse_line(line)
-        @counties[c.fips_county_code] = c
+        @counties[c.state_county_code] = c
       end
+    end
+
+    # Given the county code, return the short county name.
+    def county_for_boundary(boundary)
+      val = nil
+      if @counties.has_key? boundary.state_county_code
+        val = @counties[boundary.state_county_code].short_county_name
+      end
+      val
     end
 
   end
