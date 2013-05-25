@@ -50,7 +50,7 @@ module Taxem
     end
 
     # Strip the legal description off the end of the place name.
-    def place_name_no_legal
+    def short_place_name
       # Drop the last word, it is always the legal description.
       words = place_name.split
       words.slice!(-1) if words.size > 1

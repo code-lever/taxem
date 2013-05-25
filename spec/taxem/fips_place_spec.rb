@@ -34,7 +34,7 @@ describe Taxem::FipsPlace do
   # The fips_place_code should be the state and place
   # codes concatenated together
   its(:fips_place_code) { should == '12' }
-  its(:place_name_no_legal) {should == '3'}
+  its(:short_place_name) {should == '3'}
 
   describe '::parse_line' do
     let(:line) { 'AL|01|00100|Abanda CDP|Census Designated Place|S|Chambers County' }
@@ -43,7 +43,7 @@ describe Taxem::FipsPlace do
     its(:county) { should == 'Chambers County' }
     its(:fips_place_code) { should == '0100100' }
     its(:place_name) {should == 'Abanda CDP'}
-    its(:place_name_no_legal) {should == 'Abanda'}
+    its(:short_place_name) {should == 'Abanda'}
   end
 
 end

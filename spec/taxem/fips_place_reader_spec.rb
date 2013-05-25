@@ -28,7 +28,7 @@ describe Taxem::FipsPlaceReader do
     its(:type) { should == 'Incorporated Place' }
     its(:func_stat) { should == 'A' }
     its(:county) { should == 'Douglas County' }
-    its(:place_name_no_legal) { should == 'Omaha' }
+    its(:short_place_name) { should == 'Omaha' }
   end
 end
 
