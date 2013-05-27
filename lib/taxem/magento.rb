@@ -1,5 +1,14 @@
 module Taxem
   class Magento
+    class NoZipError < RuntimeError
+    end
+
+    class NoStateError < RuntimeError
+    end
+
+    class NoRateError < RuntimeError
+    end
+
     attr_reader :code,
                 :country,
                 :state,
@@ -19,19 +28,34 @@ module Taxem
     end
 
     def initialize(data)
-      zip_range_from = data[:zip_range_from]
-      zip_range_to = data[:zip_range_to]
-      rate = data[:rate]
+      state = data[:state]
+      raise NoStateError if state.nil?
 
-      @code = "US-NE-#{zip_range_from}-#{zip_range_to}-Rate 1"
+      county = data[:county]
+
+      place = data[:place]
+
+      zip = data[:zip]
+      raise NoZipError if zip.nil?
+
+      rate = data[:rate]
+      raise NoRateError if rate.nil?
+
+      code_array = ['US']
+      code_array << state unless state.nil?
+      code_array << county unless county.nil?
+      code_array << place unless place.nil?
+      code_array << zip unless zip.nil?
+
+      @code = code_array.join('-')
       @country = 'US'
-      @state = 'NE'
-      @zip_code = "#{zip_range_from}-#{zip_range_to}"
-      @rate = rate
-      @zip_is_range = '1'
-      @range_from = zip_range_from
-      @range_to = zip_range_to
-      @default = ""
+      @state = state
+      @zip_code = "#{zip}"
+      @rate = "#{rate}"
+      @zip_is_range = ''
+      @range_from = ''
+      @range_to = ''
+      @default = ''
     end
 
     def to_s
