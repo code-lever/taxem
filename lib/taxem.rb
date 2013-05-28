@@ -11,6 +11,7 @@ require 'taxem/fips_place'
 require 'taxem/fips_county'
 require 'taxem/fips_county_reader'
 require 'taxem/fips_place_reader'
+require 'taxem/magento_writer'
 
 module Taxem
   # Your code goes here...
