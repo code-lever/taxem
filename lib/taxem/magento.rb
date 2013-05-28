@@ -40,6 +40,7 @@ module Taxem
 
       rate = rate_item.rate
       raise NoRateError if rate.nil?
+      rate = (Float(rate) * 100.0).round(4)
 
       code_array = ['US']
       code_array << state unless state.nil?

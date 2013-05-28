@@ -5,7 +5,8 @@ describe Taxem::Magento do
   let(:county) { 'Douglas' }
   let(:place) { 'Omaha' }
   let(:zip) { '12345' }
-  let(:rate) { '8.5' }
+  let(:rate) { '0.085' }
+  let(:expected_rate) {'8.5'}
   let(:data) do
     ri = Taxem::RateItem.new
     ri.state = state
@@ -43,13 +44,13 @@ describe Taxem::Magento do
   context 'State, county, and place' do
     subject { Taxem::Magento.new(data) }
     let(:expected_string) do
-      %Q("US-#{state}-#{county}-#{place}-#{zip}","US","#{state}","#{zip}","#{rate}","","","","")
+      %Q("US-#{state}-#{county}-#{place}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
     end
     its(:code) { should == "US-#{state}-#{county}-#{place}-#{zip}" }
     its(:country) { should == 'US' }
     its(:state) { should == state }
     its(:zip_code) { should == zip }
-    its(:rate) { should == rate }
+    its(:rate) { should == expected_rate }
     its(:zip_is_range) { should == '' }
     its(:range_from) { should == '' }
     its(:range_to) { should == '' }
@@ -63,13 +64,13 @@ describe Taxem::Magento do
       Taxem::Magento.new(data)
     end
     let(:expected_string) do
-      %Q("US-#{state}-#{county}-#{zip}","US","#{state}","#{zip}","#{rate}","","","","")
+      %Q("US-#{state}-#{county}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
     end
     its(:code) { should == "US-#{state}-#{county}-#{zip}" }
     its(:country) { should == 'US' }
     its(:state) { should == state }
     its(:zip_code) { should == zip }
-    its(:rate) { should == rate }
+    its(:rate) { should == expected_rate }
     its(:zip_is_range) { should == '' }
     its(:range_from) { should == '' }
     its(:range_to) { should == '' }
@@ -84,13 +85,13 @@ describe Taxem::Magento do
       Taxem::Magento.new(data)
     end
     let(:expected_string) do
-      %Q("US-#{state}-#{zip}","US","#{state}","#{zip}","#{rate}","","","","")
+      %Q("US-#{state}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
     end
     its(:code) { should == "US-#{state}-#{zip}" }
     its(:country) { should == 'US' }
     its(:state) { should == state }
     its(:zip_code) { should == zip }
-    its(:rate) { should == rate }
+    its(:rate) { should == expected_rate }
     its(:zip_is_range) { should == '' }
     its(:range_from) { should == '' }
     its(:range_to) { should == '' }
