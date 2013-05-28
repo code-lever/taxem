@@ -7,12 +7,13 @@ describe Taxem::Magento do
   let(:zip) { '12345' }
   let(:rate) { '8.5' }
   let(:data) do
-    {state: state,
-     county: county,
-     place: place,
-     zip: zip,
-     rate: rate
-    }
+    ri = Taxem::RateItem.new
+    ri.state = state
+    ri.county = county
+    ri.place = place
+    ri.zip = zip
+    ri.rate = rate
+    ri
   end
 
   subject { Taxem::Magento.new(data) }
@@ -40,15 +41,7 @@ describe Taxem::Magento do
   end
 
   context 'State, county, and place' do
-    subject do
-      Taxem::Magento.new(
-          {state: state,
-           county: county,
-           place: place,
-           zip: zip,
-           rate: rate}
-      )
-    end
+    subject { Taxem::Magento.new(data) }
     let(:expected_string) do
       %Q("US-#{state}-#{county}-#{place}-#{zip}","US","#{state}","#{zip}","#{rate}","","","","")
     end
@@ -66,12 +59,8 @@ describe Taxem::Magento do
 
   context 'State and county only' do
     subject do
-      Taxem::Magento.new(
-          {state: state,
-           county: county,
-           zip: zip,
-           rate: rate}
-      )
+      data.place = nil
+      Taxem::Magento.new(data)
     end
     let(:expected_string) do
       %Q("US-#{state}-#{county}-#{zip}","US","#{state}","#{zip}","#{rate}","","","","")
@@ -90,11 +79,9 @@ describe Taxem::Magento do
 
   context 'State only' do
     subject do
-      Taxem::Magento.new(
-          {state: state,
-           zip: zip,
-           rate: rate}
-      )
+      data.place = nil
+      data.county = nil
+      Taxem::Magento.new(data)
     end
     let(:expected_string) do
       %Q("US-#{state}-#{zip}","US","#{state}","#{zip}","#{rate}","","","","")
@@ -113,28 +100,22 @@ describe Taxem::Magento do
 
   context 'No zip provided' do
     it 'raises' do
-      expect {Taxem::Magento.new(
-          {state: state,
-           rate: rate}
-      )}.to raise_error Taxem::Magento::NoZipError
+      data.zip = nil
+      expect { Taxem::Magento.new(data) }.to raise_error Taxem::Magento::NoZipError
     end
   end
 
   context 'No state provided' do
     it 'raises' do
-      expect {Taxem::Magento.new(
-          {zip: zip,
-           rate: rate}
-      )}.to raise_error Taxem::Magento::NoStateError
+      data.state = nil
+      expect { Taxem::Magento.new(data) }.to raise_error Taxem::Magento::NoStateError
     end
   end
 
   context 'No rate provided' do
     it 'raises' do
-      expect {Taxem::Magento.new(
-          {state: state,
-           zip: zip}
-      )}.to raise_error Taxem::Magento::NoRateError
+      data.rate = nil
+      expect { Taxem::Magento.new(data) }.to raise_error Taxem::Magento::NoRateError
     end
   end
 

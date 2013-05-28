@@ -27,18 +27,18 @@ module Taxem
       %Q("#{header.join('","')}")
     end
 
-    def initialize(data)
-      state = data[:state]
+    def initialize(rate_item)
+      state = rate_item.state
       raise NoStateError if state.nil?
 
-      county = data[:county]
+      county = rate_item.county
 
-      place = data[:place]
+      place = rate_item.place
 
-      zip = data[:zip]
+      zip = rate_item.zip
       raise NoZipError if zip.nil?
 
-      rate = data[:rate]
+      rate = rate_item.rate
       raise NoRateError if rate.nil?
 
       code_array = ['US']
