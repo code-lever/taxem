@@ -10,9 +10,13 @@ module Taxem
         f.puts Magento.header_to_s
         zips = @taxem.zip_codes
         zips.each do |zip|
-          ri = @taxem.rate(zip)
-          m = Magento.new(ri)
-          f.puts m
+          the_boundary = @taxem.boundary(zip)
+          unless the_boundary.fips_county_code == "" && the_boundary.fips_place_code == ""
+            ri = @taxem.local_rate(zip)
+            m = Magento.new(ri)
+            f.puts m
+          end
+
         end
       end
     end

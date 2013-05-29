@@ -20,5 +20,15 @@ module Taxem
 
     end
 
+    # Calculate the tax rate without the State Rate.
+    #
+    def local_rate(taxable_boundary)
+
+      tax_rate = 0
+      tax_rate += @tax_rates.for_code(taxable_boundary.fips_county_code)
+      tax_rate += @tax_rates.for_code(taxable_boundary.fips_place_code)
+
+    end
+
   end
 end

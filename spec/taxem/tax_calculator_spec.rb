@@ -34,6 +34,9 @@ describe Taxem::TaxCalculator do
     it "#rate" do
       subject.rate(@taxable_boundary).should == 1
     end
+    it "#local_rate" do
+      subject.local_rate(@taxable_boundary).should == 0
+    end
   end
 
   context "when the boundary has a state indicator and a county" do
@@ -52,6 +55,9 @@ describe Taxem::TaxCalculator do
     it "#rate" do
       subject.rate(@taxable_boundary).should == 2
     end
+    it "#local_rate" do
+      subject.local_rate(@taxable_boundary).should == 1
+    end
   end
 
   context "when the boundary has a state indicator, a county, and a place" do
@@ -68,6 +74,9 @@ describe Taxem::TaxCalculator do
     end
     it "#rate" do
       subject.rate(@taxable_boundary).should == 3
+    end
+    it "#local_rate" do
+      subject.local_rate(@taxable_boundary).should == 2
     end
   end
 
@@ -86,6 +95,9 @@ describe Taxem::TaxCalculator do
     it "#rate" do
       subject.rate(@taxable_boundary).should == 2
     end
+    it "#local_rate" do
+      subject.local_rate(@taxable_boundary).should == 2
+    end
   end
 
   context "when the boundary has an state indicator of ''" do
@@ -102,6 +114,9 @@ describe Taxem::TaxCalculator do
     end
     it "#rate" do
       subject.rate(@taxable_boundary).should == 2
+    end
+    it "#local_rate" do
+      subject.local_rate(@taxable_boundary).should == 2
     end
   end
 

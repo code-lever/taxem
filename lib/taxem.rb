@@ -97,6 +97,16 @@ module Taxem
       rate_item.rate = @tax_calculator.rate(the_boundary)
       rate_item
     end
+    def local_rate(zip_code)
+      the_boundary = boundary(zip_code)
+      rate_item = RateItem.new
+      rate_item.zip = zip_code
+      rate_item.state = 'NE'
+      rate_item.county = @fips_county_reader.county_name_for_boundary(the_boundary) unless @fips_county_reader.nil?
+      rate_item.place = @fips_place_reader.place_name_for_boundary(the_boundary) unless @fips_place_reader.nil?
+      rate_item.rate = @tax_calculator.local_rate(the_boundary)
+      rate_item
+    end
 
   end
 end
