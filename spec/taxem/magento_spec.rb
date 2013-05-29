@@ -120,5 +120,23 @@ describe Taxem::Magento do
     end
   end
 
+  context 'County name with a space' do
+    subject do
+      data.county = "I have a space"
+      Taxem::Magento.new(data)
+    end
+    its(:code) {should == "US-#{state}-I_have_a_space-#{place}-#{zip}"}
+    its(:to_s) {should start_with %Q("US-#{state}-I_have_a_space-#{place}-#{zip}")}
+  end
+
+  context 'Place name with a space' do
+    subject do
+      data.place = "I have a space"
+      Taxem::Magento.new(data)
+    end
+    its(:code) {should == "US-#{state}-#{county}-I_have_a_space-#{zip}"}
+    its(:to_s) {should start_with %Q("US-#{state}-#{county}-I_have_a_space-#{zip}")}
+  end
+
 end
 
