@@ -7,7 +7,14 @@ module Taxem
 
     def write(path_to_file)
       File.open(path_to_file, 'w') do |f|
+        # Write the header
         f.puts Magento.header_to_s
+
+        # Write the state tax rate
+        m = Magento.new(@taxem.state_rate)
+        f.puts m
+
+        # Write the local tax rates
         zips = @taxem.zip_codes
         zips.each do |zip|
           the_boundary = @taxem.boundary(zip)

@@ -56,6 +56,10 @@ module Taxem
           food_drug_tax_rate_interstate == rate.food_drug_tax_rate_interstate
     end
 
+    def state_rate?
+      state==jurisdiction_fips_code
+    end
+
   end
 end
 

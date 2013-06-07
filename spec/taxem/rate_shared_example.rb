@@ -6,6 +6,7 @@ shared_examples 'a rate for TaxRates' do
   it { should respond_to :effective_begin_date }
   it { should respond_to :effective_end_date }
   it { should respond_to :same_except_dates? }
+  it { should respond_to :state_rate? }
 
   its(:general_tax_rate_intrastate) { should be_a Float }
   its(:effective_end_date) { should be_a Date }

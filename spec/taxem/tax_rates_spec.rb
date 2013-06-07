@@ -11,6 +11,7 @@ describe Taxem::TaxRates do
     rate.stub(:effective_begin_date).and_return(Date.new(2006, 1, 1))
     rate.stub(:effective_end_date).and_return(Date.new(2999, 12, 31))
     rate.stub(:same_except_dates?).and_return(true)
+    rate.stub(:state_rate?).and_return(false)
     rate
   end
 
@@ -26,6 +27,7 @@ describe Taxem::TaxRates do
     rate.stub(:effective_begin_date).and_return(Date.new(2006, 1, 1))
     rate.stub(:effective_end_date).and_return(Date.new(2099, 12, 31))
     rate.stub(:same_except_dates?).and_return(false)
+    rate.stub(:state_rate?).and_return(false)
     rate
   end
 
@@ -41,11 +43,28 @@ describe Taxem::TaxRates do
     rate.stub(:effective_begin_date).and_return(Date.new(2006, 1, 1))
     rate.stub(:effective_end_date).and_return(Date.new(2999, 12, 31))
     rate.stub(:same_except_dates?).and_return(true)
+    rate.stub(:state_rate?).and_return(false)
     rate
   end
 
   describe "Rate2" do
     subject { rate2 }
+    it_behaves_like 'a rate for TaxRates'
+  end
+
+  let(:state_rate) do
+    rate = double("Rate")
+    rate.stub(:jurisdiction_fips_code).and_return("2")
+    rate.stub(:general_tax_rate_intrastate).and_return(2.0)
+    rate.stub(:effective_begin_date).and_return(Date.new(2006, 1, 1))
+    rate.stub(:effective_end_date).and_return(Date.new(2999, 12, 31))
+    rate.stub(:same_except_dates?).and_return(true)
+    rate.stub(:state_rate?).and_return(true)
+    rate
+  end
+
+  describe "state_rate" do
+    subject { state_rate }
     it_behaves_like 'a rate for TaxRates'
   end
 
@@ -152,5 +171,19 @@ describe Taxem::TaxRates do
       end
     end
   end
+
+  describe '#state_rate' do
+    context 'rate 1 and 2 and state rate in an array' do
+      subject { Taxem::TaxRates.new.add_rates([rate1, rate2, state_rate]) }
+      its(:state_rate) { should == state_rate }
+    end
+    context 'rate 1 and 2 and no state rate' do
+      subject { Taxem::TaxRates.new.add_rates([rate1, rate2]) }
+      it "doesn't find state rate" do
+        expect { subject.state_rate }.to raise_error Taxem::StateRateNotFoundError
+      end
+    end
+  end
+
 end
 

@@ -48,6 +48,12 @@ module Taxem
   class DuplicateZipCodeError < RuntimeError
   end
 
+  # Raised when a request is made for a statewide rate, but one
+  # is not found in the rates file.
+  #
+  class StateRateNotFoundError < RuntimeError
+  end
+
   RateItem = Struct.new(:state, :county, :place, :zip, :rate)
 
   class Taxem
@@ -85,6 +91,16 @@ module Taxem
     def boundary(zip_code)
       boundary = @zip_boundaries.for_zip(zip_code)
       boundary
+    end
+
+    def state_rate
+      # the state rate is the rate where the state code is equal to the jurisdiction fips code
+      rate = @tax_rates.state_rate
+      rate_item = RateItem.new
+      rate_item.zip = '*'
+      rate_item.state = 'NE'
+      rate_item.rate = rate.general_tax_rate_intrastate
+      rate_item
     end
 
     def rate(zip_code)

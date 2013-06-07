@@ -1,4 +1,5 @@
 "Code","Country","State","Zip/Post Code","Rate","Zip/Post is Range","Range From","Range To","default"
+"US-NE-*","US","NE","*","5.5","","","",""
 "US-NE-Fremont-68026","US","NE","68026","1.5","","","",""
 "US-NE-Dakota-68030","US","NE","68030","0.5","","","",""
 "US-NE-Uehling-68063","US","NE","68063","1.0","","","",""

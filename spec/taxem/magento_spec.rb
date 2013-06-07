@@ -6,7 +6,7 @@ describe Taxem::Magento do
   let(:place) { 'Omaha' }
   let(:zip) { '12345' }
   let(:rate) { '0.085' }
-  let(:expected_rate) {'8.5'}
+  let(:expected_rate) { '8.5' }
   let(:data) do
     ri = Taxem::RateItem.new
     ri.state = state
@@ -125,8 +125,8 @@ describe Taxem::Magento do
       data.county = "I have a space"
       Taxem::Magento.new(data)
     end
-    its(:code) {should == "US-#{state}-I_have_a_space-#{place}-#{zip}"}
-    its(:to_s) {should start_with %Q("US-#{state}-I_have_a_space-#{place}-#{zip}")}
+    its(:code) { should == "US-#{state}-I_have_a_space-#{place}-#{zip}" }
+    its(:to_s) { should start_with %Q("US-#{state}-I_have_a_space-#{place}-#{zip}") }
   end
 
   context 'Place name with a space' do
@@ -134,9 +134,25 @@ describe Taxem::Magento do
       data.place = "I have a space"
       Taxem::Magento.new(data)
     end
-    its(:code) {should == "US-#{state}-#{county}-I_have_a_space-#{zip}"}
-    its(:to_s) {should start_with %Q("US-#{state}-#{county}-I_have_a_space-#{zip}")}
+    its(:code) { should == "US-#{state}-#{county}-I_have_a_space-#{zip}" }
+    its(:to_s) { should start_with %Q("US-#{state}-#{county}-I_have_a_space-#{zip}") }
   end
+
+  context 'A state wide rate' do
+    subject do
+      data.zip = '*'
+      data.place = nil
+      data.county = nil
+      Taxem::Magento.new(data)
+    end
+    let(:expected_string) do
+      %Q("US-#{state}-*","US","#{state}","*","#{expected_rate}","","","","")
+    end
+    its(:code) { should == "US-#{state}-*" }
+    its(:zip_code) { should == '*' }
+    its(:to_s) {should == expected_string}
+  end
+
 
 end
 

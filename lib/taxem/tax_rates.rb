@@ -15,6 +15,7 @@ module Taxem
       @by_code[""] = DummyRate.new(0.0)
       @by_code[nil] = DummyRate.new(0.0)
       @by_code["00"] = DummyRate.new(0.0)
+      @state_rate = nil
     end
 
     def add_rate(rate)
@@ -30,6 +31,9 @@ module Taxem
           end
         end
         @by_code[rate.jurisdiction_fips_code] = rate
+
+        # If this is the rate for the state, remember it.
+        @state_rate = rate if rate.state_rate?
       end
       self
     end
@@ -46,6 +50,11 @@ module Taxem
       raise RateNotFoundError unless @by_code.has_key? code
       rate = @by_code[code].general_tax_rate_intrastate
       rate
+    end
+
+    def state_rate
+      raise StateRateNotFoundError if @state_rate.nil?
+      @state_rate
     end
 
   end

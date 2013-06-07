@@ -90,4 +90,19 @@ describe Taxem::Rate do
 
   end
 
+  describe '#state_rate' do
+    context "state is jurisdiction fips code" do
+      let(:line) { '31,45,31,0.0550,0.0550,0.0550,0.0550,20061001,29991231' }
+      subject { Taxem::Rate.parse_line(line) }
+      its(:state_rate?) { should be_true }
+    end
+
+    context 'state is not jurisdiction fips code' do
+      let(:line) { '31,45,3,0.0550,0.0550,0.0550,0.0550,20061001,29991231' }
+      subject { Taxem::Rate.parse_line(line) }
+      its(:state_rate?) { should be_false }
+    end
+  end
+
+
 end
