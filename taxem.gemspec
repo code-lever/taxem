@@ -1,23 +1,27 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'taxem/version'
 
-Gem::Specification.new do |gem|
-  gem.name          = "taxem"
-  gem.version       = Taxem::VERSION
-  gem.authors       = ["Gabe Cook"]
-  gem.email         = ["gcook@aramisgroup.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+Gem::Specification.new do |spec|
+  spec.name          = "taxem"
+  spec.version       = Taxem::VERSION
+  spec.authors       = ["Gabe Cook"]
+  spec.email         = ["gcook@aramisgroup.com"]
+  spec.description   = %q{TODO: Write a gem description}
+  spec.summary       = %q{TODO: Write a gem summary}
+  spec.homepage      = ""
+  spec.license       = "MIT"
 
-  gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ["lib"]
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
 
-  gem.add_development_dependency 'rspec', '~> 2.12'
-  gem.add_development_dependency 'rake', '~> 10.0'
-  gem.add_development_dependency 'ci_reporter', '= 1.8.4'
+  spec.add_development_dependency 'rspec', '~> 2.12'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'ci_reporter', '= 1.8.4'
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'simplecov-gem-adapter'
+  spec.add_development_dependency 'simplecov-rcov'
 end
