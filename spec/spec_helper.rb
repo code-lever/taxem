@@ -1,10 +1,15 @@
+require 'simplecov'
+require 'simplecov-gem-adapter'
+require 'simplecov-rcov'
+SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+SimpleCov.start 'gem' if ENV['COVERAGE']
+
 require 'rubygems'
 require 'rspec'
 require 'pp'
 require 'bundler/setup'
 
 require 'taxem'
-
 
 require "#{File.dirname(__FILE__)}/taxem/tax_data"
 
