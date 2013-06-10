@@ -8,16 +8,13 @@ module Taxem
     end
 
     def add_boundary(boundary)
-      if date.between?(boundary.beginning_effective_date, boundary.ending_effective_date)
-        zip_code_low = Integer(boundary.zip_code_low)
-        zip_code_high = Integer(boundary.zip_code_high)
-        zips = Range.new(zip_code_low, zip_code_high)
-        zips.each do |zip|
-          raise DuplicateZipCodeError if @by_zip.has_key? zip
-          @by_zip[zip] = boundary
-        end
+      zip_code_low = Integer(boundary.zip_code_low)
+      zip_code_high = Integer(boundary.zip_code_high)
+      zips = Range.new(zip_code_low, zip_code_high)
+      zips.each do |zip|
+        raise DuplicateZipCodeError if @by_zip.has_key? zip
+        @by_zip[zip] = boundary
       end
-
       self
     end
 

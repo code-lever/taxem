@@ -125,6 +125,8 @@ module Taxem
       "#{fips_state_code}#{fips_place_code}"
     end
 
+    # Only includes boundaries which are currently effective
+    #
     def self.parse_line_zip(line)
       me = nil
       if line[0] == 'Z' # We are only interested in the Zip records; performance improvement.
@@ -135,6 +137,8 @@ module Taxem
       me
     end
 
+    # Only includes boundaries which are currently effective
+    #
     def self.parse_line_zip4(line)
       me = nil
       if line[0] == '4' # We are only interested in the Zip+4 records; performance improvement.

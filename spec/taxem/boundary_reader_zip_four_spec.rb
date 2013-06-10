@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Taxem::BoundaryReaderZipFour do
 
   before(:all) do
+    #TODO: This is wayyyy slow. Find a way to spped this up.
+    # we probably don't need to eat the whole file for this.
     path_to_csv = boundary_data
     @boundary_reader = Taxem::BoundaryReaderZipFour.new(path_to_csv)
   end

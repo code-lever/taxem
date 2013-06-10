@@ -31,20 +31,6 @@ describe Taxem::ZipBoundaries do
     it_behaves_like "a boundary for ZipBoundaries"
   end
 
-  let(:boundary_not_effective) do
-    boundary_not_effective = double("Boundary")
-    boundary_not_effective.stub(:zip_code_low).and_return("32345")
-    boundary_not_effective.stub(:zip_code_high).and_return("32347")
-    boundary_not_effective.stub(:beginning_effective_date).and_return(Date.new(2001, 11, 11))
-    boundary_not_effective.stub(:ending_effective_date).and_return(Date.new(2006, 12, 31))
-    boundary_not_effective
-  end
-
-  describe "boundary_not_effective" do
-    subject { boundary_not_effective }
-    it_behaves_like "a boundary for ZipBoundaries"
-  end
-
   it 'accepts a date in the initializer' do
     Taxem::ZipBoundaries.new(Date.new(2011, 11, 11)).date.should == Date.new(2011, 11, 11)
   end
@@ -54,7 +40,6 @@ describe Taxem::ZipBoundaries do
       subject.for_zip('unknown').should be_nil
     end
   end
-
 
   describe "#add_boundary" do
     it "raises an error is a boundary with the same zip is added a second time" do
@@ -74,14 +59,6 @@ describe Taxem::ZipBoundaries do
       end
     end
 
-    context "boundary not effective added" do
-      subject { Taxem::ZipBoundaries.new.add_boundary(boundary_not_effective) }
-      it "doesn't find the boundary not effective zip codes" do
-        [32345, 32346, 32347].each do |zip|
-          subject.for_zip(zip).should be_nil
-        end
-      end
-    end
   end
 
 
