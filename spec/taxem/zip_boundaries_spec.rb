@@ -17,6 +17,20 @@ describe Taxem::ZipBoundaries do
     it_behaves_like "a boundary for ZipBoundaries"
   end
 
+  let(:b1a) do
+    b1a = double("Boundary")
+    b1a.stub(:zip_code_low).and_return("12345")
+    b1a.stub(:zip_code_high).and_return("12347")
+    b1a.stub(:beginning_effective_date).and_return(Date.new(2002, 2, 22))
+    b1a.stub(:ending_effective_date).and_return(Date.new(2999, 12, 31))
+    b1a
+  end
+
+  describe "b1a" do
+    subject { b1a }
+    it_behaves_like "a boundary for ZipBoundaries"
+  end
+
   let(:b2) do
     b2 = double("Boundary")
     b2.stub(:zip_code_low).and_return("22345")
@@ -42,16 +56,29 @@ describe Taxem::ZipBoundaries do
   end
 
   describe "#add_boundary" do
-    it "raises an error is a boundary with the same zip is added a second time" do
+    it "won't add the same boundary to the same zip code" do
+      # No duplicate boundaries per zip
       subject.add_boundary(b1)
-      expect { subject.add_boundary(b1) }.to raise_error Taxem::DuplicateZipCodeError
+      subject.for_zip(12345).should == [b1]
     end
 
     context "Boundary 1 added" do
       subject { Taxem::ZipBoundaries.new.add_boundary(b1) }
       it "finds b1 zip codes" do
         [12345, 12346, 12347].each do |zip|
-          subject.for_zip(zip).should == b1
+          subject.for_zip(zip).should == [b1]
+        end
+      end
+      it "doesn't find the b1 + 1 zip code" do
+        subject.for_zip(22348).should == nil
+      end
+    end
+
+    context "Boundary 1 and 1a added" do
+      subject { Taxem::ZipBoundaries.new.add_boundary(b1).add_boundary(b1a) }
+      it "finds b1 zip codes" do
+        [12345, 12346, 12347].each do |zip|
+          subject.for_zip(zip).should == [b1, b1a]
         end
       end
       it "doesn't find the b1 + 1 zip code" do
@@ -61,18 +88,17 @@ describe Taxem::ZipBoundaries do
 
   end
 
-
   describe "#add_boundaries" do
     context "Boundary 1 and boundary 2 added as an array" do
       subject { Taxem::ZipBoundaries.new.add_boundaries([b1, b2]) }
       it "finds the b1 zip codes" do
         [12345, 12346, 12347].each do |zip|
-          subject.for_zip(zip).should == b1
+          subject.for_zip(zip).should == [b1]
         end
       end
       it "finds the b2 zip codes" do
         [22345, 22346, 22347].each do |zip|
-          subject.for_zip(zip).should == b2
+          subject.for_zip(zip).should == [b2]
         end
       end
       it "doesn't find the b1 + 1 zip code" do
@@ -86,8 +112,8 @@ describe Taxem::ZipBoundaries do
       its(:all_zips) { should == [12345, 12346, 12347, 22345, 22346, 22347] }
     end
     context "nothing added" do
-      subject {Taxem::ZipBoundaries.new}
-      its(:all_zips) {should ==[]}
+      subject { Taxem::ZipBoundaries.new }
+      its(:all_zips) { should ==[] }
     end
   end
 

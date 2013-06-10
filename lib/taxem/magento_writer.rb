@@ -17,13 +17,11 @@ module Taxem
         # Write the local tax rates
         zips = @taxem.zip_codes
         zips.each do |zip|
-          the_boundary = @taxem.boundary(zip)
-          unless the_boundary.fips_county_code == "" && the_boundary.fips_place_code == ""
-            ri = @taxem.local_rate(zip)
-            m = Magento.new(ri)
+          rate = @taxem.local_rate(zip)
+          unless rate.nil?
+            m = Magento.new(rate)
             f.puts m
           end
-
         end
       end
     end

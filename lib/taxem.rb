@@ -41,13 +41,6 @@ module Taxem
   class DuplicateRateError < RuntimeError
   end
 
-  # Raised when a boundary with a duplicate 5 digit zip code
-  # is added to ZipBoundaries. There should only be one
-  # effective zip code for the specified time period.
-  #
-  class DuplicateZipCodeError < RuntimeError
-  end
-
   # Raised when a request is made for a statewide rate, but one
   # is not found in the rates file.
   #
@@ -93,8 +86,9 @@ module Taxem
       boundary
     end
 
+    # the state rate is the rate where the state code is equal to the jurisdiction fips code
+    #
     def state_rate
-      # the state rate is the rate where the state code is equal to the jurisdiction fips code
       rate = @tax_rates.state_rate
       rate_item = RateItem.new
       rate_item.zip = '*'
@@ -104,24 +98,42 @@ module Taxem
     end
 
     def rate(zip_code)
-      the_boundary = boundary(zip_code)
+      max_boundary = max_tax_rate_boundary(zip_code)
       rate_item = RateItem.new
       rate_item.zip = zip_code
       rate_item.state = 'NE'
-      rate_item.county = @fips_county_reader.county_name_for_boundary(the_boundary) unless @fips_county_reader.nil?
-      rate_item.place = @fips_place_reader.place_name_for_boundary(the_boundary) unless @fips_place_reader.nil?
-      rate_item.rate = @tax_calculator.rate(the_boundary)
+      rate_item.county = @fips_county_reader.county_name_for_boundary(max_boundary) unless @fips_county_reader.nil?
+      rate_item.place = @fips_place_reader.place_name_for_boundary(max_boundary) unless @fips_place_reader.nil?
+      rate_item.rate = @tax_calculator.rate(max_boundary)
       rate_item
     end
+
+    # Returns nil if the boundary's tax is only calculated
+    # using the state rate.
+    # If the state rate is the only tax rate that applies,
+    # then there is NO local rate.
+    #
     def local_rate(zip_code)
-      the_boundary = boundary(zip_code)
-      rate_item = RateItem.new
-      rate_item.zip = zip_code
-      rate_item.state = 'NE'
-      rate_item.county = @fips_county_reader.county_name_for_boundary(the_boundary) unless @fips_county_reader.nil?
-      rate_item.place = @fips_place_reader.place_name_for_boundary(the_boundary) unless @fips_place_reader.nil?
-      rate_item.rate = @tax_calculator.local_rate(the_boundary)
+      max_boundary = max_tax_rate_boundary(zip_code)
+      rate_item = nil
+      unless max_boundary.fips_county_code == "" && max_boundary.fips_place_code == ""
+        rate_item = RateItem.new
+        rate_item.zip = zip_code
+        rate_item.state = 'NE'
+        rate_item.county = @fips_county_reader.county_name_for_boundary(max_boundary) unless @fips_county_reader.nil?
+        rate_item.place = @fips_place_reader.place_name_for_boundary(max_boundary) unless @fips_place_reader.nil?
+        rate_item.rate = @tax_calculator.local_rate(max_boundary)
+      end
       rate_item
+    end
+
+    # Find the boundary with the largest tax rate in the zip code.
+    # We will use this as the effective tax rate for the zip.
+    #
+    def max_tax_rate_boundary(zip_code)
+      the_boundaries = boundary(zip_code)
+      max_boundary = the_boundaries.max_by { |boundary| @tax_calculator.rate(boundary) }
+      max_boundary
     end
 
   end
