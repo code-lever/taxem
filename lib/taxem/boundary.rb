@@ -125,7 +125,7 @@ module Taxem
       "#{fips_state_code}#{fips_place_code}"
     end
 
-    def self.parse_line(line)
+    def self.parse_line_zip(line)
       me = nil
       if line[0] == 'Z' # We are only interested in the Zip records; performance improvement.
         row = line.split(',')
@@ -135,6 +135,15 @@ module Taxem
       me
     end
 
+    def self.parse_line_zip4(line)
+      me = nil
+      if line[0] == '4' # We are only interested in the Zip+4 records; performance improvement.
+        row = line.split(',')
+        b = Boundary.new(row)
+        me = b if Date.today.between?(b.beginning_effective_date, b.ending_effective_date)
+      end
+      me
+    end
 
   end
 end

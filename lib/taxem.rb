@@ -1,7 +1,8 @@
 require "taxem/version"
 require 'taxem/boundary'
 require 'taxem/rate'
-require 'taxem/boundary_reader'
+require 'taxem/boundary_reader_zip'
+require 'taxem/boundary_reader_zip_four'
 require 'taxem/rate_reader'
 require 'taxem/magento'
 require 'taxem/tax_calculator'
@@ -14,7 +15,6 @@ require 'taxem/fips_place_reader'
 require 'taxem/magento_writer'
 
 module Taxem
-  # Your code goes here...
 
   # Raised when computing the tax for a boundary
   # and there is no corresponding tax rate for either:
@@ -67,7 +67,7 @@ module Taxem
     def initialize(params)
       path_to_boundaries = params[:path_to_boundaries]
       raise NoPathToBondariesError if path_to_boundaries.nil?
-      boundary_reader = BoundaryReader.new(path_to_boundaries)
+      boundary_reader = BoundaryReaderZip.new(path_to_boundaries)
 
       path_to_rates = params[:path_to_rates]
       raise NoPathToRatesError if path_to_rates.nil?
