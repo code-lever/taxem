@@ -60,7 +60,7 @@ module Taxem
     def initialize(params)
       path_to_boundaries = params[:path_to_boundaries]
       raise NoPathToBondariesError if path_to_boundaries.nil?
-      boundary_reader = BoundaryReaderZip.new(path_to_boundaries)
+      boundary_reader = BoundaryReaderZipFour.new(path_to_boundaries)
 
       path_to_rates = params[:path_to_rates]
       raise NoPathToRatesError if path_to_rates.nil?
@@ -106,6 +106,34 @@ module Taxem
       rate_item.place = @fips_place_reader.place_name_for_boundary(max_boundary) unless @fips_place_reader.nil?
       rate_item.rate = @tax_calculator.rate(max_boundary)
       rate_item
+    end
+
+    def boundaries_by_zip_report
+      zips = zip_codes
+      lines = []
+      zips.each do |zip_code|
+        lines << "Zip Code: #{zip_code}"
+
+        # Get the unique counties and places
+        the_boundaries = boundary(zip_code)
+        unique_locations = the_boundaries.uniq { |b| "#{b.fips_county_code} #{b.fips_place_code}" }
+        unique_locations.each do |b|
+          names = []
+          names << "Local Rate: #{@tax_calculator.local_rate(b)}"
+          unless @fips_county_reader.nil?
+            county_name = @fips_county_reader.county_name_for_boundary(b)
+            names << "County: #{county_name}" unless county_name.nil?
+          end
+
+          unless @fips_place_reader.nil?
+            place_name = @fips_place_reader.place_name_for_boundary(b)
+            names << "Place: #{place_name}" unless place_name.nil?
+          end
+
+          lines << " + #{names.join(' ')}"
+        end
+      end
+      lines
     end
 
     # Returns nil if the boundary's tax is only calculated
