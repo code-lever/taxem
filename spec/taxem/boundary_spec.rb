@@ -67,6 +67,38 @@ describe Taxem::Boundary do
 
   its(:state_county_code) { should == "#{subject.fips_state_code}#{subject.fips_county_code}" }
   its(:state_place_code) { should == "#{subject.fips_state_code}#{subject.fips_place_code}" }
+  its(:county_place_code) { should == "#{subject.fips_county_code}#{subject.fips_place_code}" }
+
+  describe '#has_local_tax?' do
+    context 'has a county and place code' do
+      let(:line) { '4,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,1,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line_zip4(line) }
+      its(:fips_county_code) { should == '1' }
+      its(:fips_place_code) { should == '1' }
+      its(:has_local_tax?) { should be_true }
+    end
+    context 'has a county code only' do
+      let(:line) { '4,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line_zip4(line) }
+      its(:fips_county_code) { should == '1' }
+      its(:fips_place_code) { should be_empty }
+      its(:has_local_tax?) { should be_true }
+    end
+    context 'has a place code only' do
+      let(:line) { '4,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line_zip4(line) }
+      its(:fips_county_code) { should be_empty }
+      its(:fips_place_code) { should == '1' }
+      its(:has_local_tax?) { should be_true }
+    end
+    context 'has a neither a county or a place code only' do
+      let(:line) { '4,20070701,29991231,,,,,,,,,,,,,,,68420,,68420,,,31,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,' }
+      subject { Taxem::Boundary.parse_line_zip4(line) }
+      its(:fips_county_code) { should be_empty }
+      its(:fips_place_code) { should be_empty }
+      its(:has_local_tax?) { should be_false }
+    end
+  end
 
   describe '::parse_line_zip' do
 

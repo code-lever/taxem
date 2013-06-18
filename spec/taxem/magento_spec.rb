@@ -2,16 +2,12 @@ require 'spec_helper'
 
 describe Taxem::Magento do
   let(:state) { 'NE' }
-  let(:county) { 'Douglas' }
-  let(:place) { 'Omaha' }
   let(:zip) { '12345' }
   let(:rate) { '0.085' }
   let(:expected_rate) { '8.5' }
   let(:data) do
     ri = Taxem::RateItem.new
     ri.state = state
-    ri.county = county
-    ri.place = place
     ri.zip = zip
     ri.rate = rate
     ri
@@ -41,63 +37,20 @@ describe Taxem::Magento do
 
   end
 
-  context 'State, county, and place' do
-    subject { Taxem::Magento.new(data) }
-    let(:expected_string) do
-      %Q("US-#{state}-#{county}-#{place}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
-    end
-    its(:code) { should == "US-#{state}-#{county}-#{place}-#{zip}" }
-    its(:country) { should == 'US' }
-    its(:state) { should == state }
-    its(:zip_code) { should == zip }
-    its(:rate) { should == expected_rate }
-    its(:zip_is_range) { should == '' }
-    its(:range_from) { should == '' }
-    its(:range_to) { should == '' }
-    its(:default) { should == '' }
-    its(:to_s) { should == expected_string }
+  subject { Taxem::Magento.new(data) }
+  let(:expected_string) do
+    %Q("US-#{state}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
   end
-
-  context 'State and county only' do
-    subject do
-      data.place = nil
-      Taxem::Magento.new(data)
-    end
-    let(:expected_string) do
-      %Q("US-#{state}-#{county}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
-    end
-    its(:code) { should == "US-#{state}-#{county}-#{zip}" }
-    its(:country) { should == 'US' }
-    its(:state) { should == state }
-    its(:zip_code) { should == zip }
-    its(:rate) { should == expected_rate }
-    its(:zip_is_range) { should == '' }
-    its(:range_from) { should == '' }
-    its(:range_to) { should == '' }
-    its(:default) { should == '' }
-    its(:to_s) { should == expected_string }
-  end
-
-  context 'State only' do
-    subject do
-      data.place = nil
-      data.county = nil
-      Taxem::Magento.new(data)
-    end
-    let(:expected_string) do
-      %Q("US-#{state}-#{zip}","US","#{state}","#{zip}","#{expected_rate}","","","","")
-    end
-    its(:code) { should == "US-#{state}-#{zip}" }
-    its(:country) { should == 'US' }
-    its(:state) { should == state }
-    its(:zip_code) { should == zip }
-    its(:rate) { should == expected_rate }
-    its(:zip_is_range) { should == '' }
-    its(:range_from) { should == '' }
-    its(:range_to) { should == '' }
-    its(:default) { should == '' }
-    its(:to_s) { should == expected_string }
-  end
+  its(:code) { should == "US-#{state}-#{zip}" }
+  its(:country) { should == 'US' }
+  its(:state) { should == state }
+  its(:zip_code) { should == zip }
+  its(:rate) { should == expected_rate }
+  its(:zip_is_range) { should == '' }
+  its(:range_from) { should == '' }
+  its(:range_to) { should == '' }
+  its(:default) { should == '' }
+  its(:to_s) { should == expected_string }
 
   context 'No zip provided' do
     it 'raises' do
@@ -118,24 +71,6 @@ describe Taxem::Magento do
       data.rate = nil
       expect { Taxem::Magento.new(data) }.to raise_error Taxem::Magento::NoRateError
     end
-  end
-
-  context 'County name with a space' do
-    subject do
-      data.county = "I have a space"
-      Taxem::Magento.new(data)
-    end
-    its(:code) { should == "US-#{state}-I_have_a_space-#{place}-#{zip}" }
-    its(:to_s) { should start_with %Q("US-#{state}-I_have_a_space-#{place}-#{zip}") }
-  end
-
-  context 'Place name with a space' do
-    subject do
-      data.place = "I have a space"
-      Taxem::Magento.new(data)
-    end
-    its(:code) { should == "US-#{state}-#{county}-I_have_a_space-#{zip}" }
-    its(:to_s) { should start_with %Q("US-#{state}-#{county}-I_have_a_space-#{zip}") }
   end
 
   context 'A state wide rate' do

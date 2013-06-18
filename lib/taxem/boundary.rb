@@ -125,12 +125,21 @@ module Taxem
       "#{fips_state_code}#{fips_place_code}"
     end
 
+    def county_place_code
+      "#{fips_county_code}#{fips_place_code}"
+    end
+
+    def has_local_tax?
+      not fips_county_code.empty? && fips_place_code.empty?
+    end
+
+
     # Only includes boundaries which are currently effective
     #
     def self.parse_line_zip(line)
       me = nil
       if line[0] == 'Z' # We are only interested in the Zip records; performance improvement.
-        row = line.split(',')
+        row = line.split(',', -1)
         b = Boundary.new(row)
         me = b if Date.today.between?(b.beginning_effective_date, b.ending_effective_date)
       end
@@ -142,7 +151,7 @@ module Taxem
     def self.parse_line_zip4(line)
       me = nil
       if line[0] == '4' # We are only interested in the Zip+4 records; performance improvement.
-        row = line.split(',')
+        row = line.split(',', -1)
         b = Boundary.new(row)
         me = b if Date.today.between?(b.beginning_effective_date, b.ending_effective_date)
       end

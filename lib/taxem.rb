@@ -47,6 +47,12 @@ module Taxem
   class StateRateNotFoundError < RuntimeError
   end
 
+  # Raised when a request is made for a boundary
+  # and the zip is not found.
+  #
+  class BoundaryNotFoundError < RuntimeError
+  end
+
   RateItem = Struct.new(:state, :county, :place, :zip, :rate)
 
   class Taxem
@@ -86,6 +92,13 @@ module Taxem
       boundary
     end
 
+    def boundary!(zip_code)
+      my_boundary = boundary(zip_code)
+      raise BoundaryNotFoundError, "Could not find a boundary for zip code #{zip_code}" if my_boundary.nil?
+      my_boundary
+    end
+
+
     # the state rate is the rate where the state code is equal to the jurisdiction fips code
     #
     def state_rate
@@ -98,19 +111,18 @@ module Taxem
     end
 
     def rate(zip_code)
-      max_boundary = max_tax_rate_boundary(zip_code)
+      max_boundary = boundary_with_max_rate(zip_code)
       rate_item = RateItem.new
       rate_item.zip = zip_code
       rate_item.state = 'NE'
-      rate_item.county = @fips_county_reader.county_name_for_boundary(max_boundary) unless @fips_county_reader.nil?
-      rate_item.place = @fips_place_reader.place_name_for_boundary(max_boundary) unless @fips_place_reader.nil?
       rate_item.rate = @tax_calculator.rate(max_boundary)
       rate_item
     end
 
     def boundaries_by_zip_report
-      zips = zip_codes
       lines = []
+      lines << "State Rate: #{@tax_rates.state_rate}"
+      zips = zip_codes
       zips.each do |zip_code|
         lines << "Zip Code: #{zip_code}"
 
@@ -118,19 +130,20 @@ module Taxem
         the_boundaries = boundary(zip_code)
         unique_locations = the_boundaries.uniq { |b| "#{b.fips_county_code} #{b.fips_place_code}" }
         unique_locations.each do |b|
-          names = []
-          names << "Local Rate: #{@tax_calculator.local_rate(b)}"
-          unless @fips_county_reader.nil?
-            county_name = @fips_county_reader.county_name_for_boundary(b)
-            names << "County: #{county_name}" unless county_name.nil?
-          end
+          if b.has_local_tax?
+            names = []
+            names << "Rate: #{@tax_calculator.local_rate(b)}"
+            unless @fips_county_reader.nil?
+              county_name = @fips_county_reader.county_name_for_boundary(b)
+              names << "County: #{county_name}" unless county_name.nil?
+            end
 
-          unless @fips_place_reader.nil?
-            place_name = @fips_place_reader.place_name_for_boundary(b)
-            names << "Place: #{place_name}" unless place_name.nil?
+            unless @fips_place_reader.nil?
+              place_name = @fips_place_reader.place_name_for_boundary(b)
+              names << "Place: #{place_name}" unless place_name.nil?
+            end
+            lines << " + #{names.join(' ')}"
           end
-
-          lines << " + #{names.join(' ')}"
         end
       end
       lines
@@ -142,14 +155,12 @@ module Taxem
     # then there is NO local rate.
     #
     def local_rate(zip_code)
-      max_boundary = max_tax_rate_boundary(zip_code)
+      max_boundary = boundary_with_max_rate(zip_code)
       rate_item = nil
-      unless max_boundary.fips_county_code == "" && max_boundary.fips_place_code == ""
+      if max_boundary.has_local_tax?
         rate_item = RateItem.new
         rate_item.zip = zip_code
         rate_item.state = 'NE'
-        rate_item.county = @fips_county_reader.county_name_for_boundary(max_boundary) unless @fips_county_reader.nil?
-        rate_item.place = @fips_place_reader.place_name_for_boundary(max_boundary) unless @fips_place_reader.nil?
         rate_item.rate = @tax_calculator.local_rate(max_boundary)
       end
       rate_item
@@ -158,8 +169,8 @@ module Taxem
     # Find the boundary with the largest tax rate in the zip code.
     # We will use this as the effective tax rate for the zip.
     #
-    def max_tax_rate_boundary(zip_code)
-      the_boundaries = boundary(zip_code)
+    def boundary_with_max_rate(zip_code)
+      the_boundaries = boundary!(zip_code)
       max_boundary = the_boundaries.max_by { |boundary| @tax_calculator.rate(boundary) }
       max_boundary
     end

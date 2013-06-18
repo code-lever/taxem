@@ -31,10 +31,6 @@ module Taxem
       state = rate_item.state
       raise NoStateError if state.nil?
 
-      county = rate_item.county
-
-      place = rate_item.place
-
       zip = rate_item.zip
       raise NoZipError if zip.nil?
 
@@ -44,8 +40,6 @@ module Taxem
 
       code_array = ['US']
       code_array << state unless state.nil?
-      code_array << county.tr(' ', '_') unless county.nil?
-      code_array << place.tr(' ', '_') unless place.nil?
       code_array << zip unless zip.nil?
 
       @code = code_array.join('-')
