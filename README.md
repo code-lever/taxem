@@ -1,4 +1,4 @@
-# Taxem [![Build Status](https://travis-ci.org/code-lever/taxem.png)](https://travis-ci.org/code-lever/taxem) [![Dependency Status](https://gemnasium.com/code-lever/taxem.png)](https://gemnasium.com/code-lever/taxem) [![Code Climate](https://codeclimate.com/github/code-lever/taxem.png)](https://codeclimate.com/github/code-lever/taxem)
+# Taxem [![Build Status](https://travis-ci.org/code-lever/taxem.png)](https://travis-ci.org/code-lever/taxem) [![Code Climate](https://codeclimate.com/github/code-lever/taxem.png)](https://codeclimate.com/github/code-lever/taxem)
 
 TODO: Write a gem description
 
